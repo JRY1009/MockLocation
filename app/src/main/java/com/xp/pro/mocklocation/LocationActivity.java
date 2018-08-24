@@ -1,7 +1,11 @@
 package com.xp.pro.mocklocation;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import com.xp.pro.mocklocationlib.LocationBean;
 import com.xp.pro.mocklocationlib.LocationWidget;
@@ -14,6 +18,8 @@ public class LocationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_content_view);
+
+
         initMockLocationData();
         initView();
     }

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.xp.pro.mocklocation"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,7 +20,8 @@ android {
 }
 
 dependencies {
-//    compile project(":mocklocationlib")
-    compile 'wgmf:imagepickerlib:1.0.0'
-    compile 'wgmf:mocklocationlib:1.0.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    compile project(":mocklocationlib")
+//    compile 'wgmf:imagepickerlib:1.0.0'
+//    compile 'wgmf:mocklocationlib:1.0.0'
 }
