@@ -1,1 +1,1 @@
-include ':app', ':mocklocationlib'
+include ':app', ':mocklocationlib', ':onsdk_all', ':NaviTts'

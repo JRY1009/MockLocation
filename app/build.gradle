@@ -10,6 +10,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
     buildTypes {
         release {
@@ -17,11 +21,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+
+        instrumentTest.setRoot('tests')
+
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
 }
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(":mocklocationlib")
 //    compile 'wgmf:imagepickerlib:1.0.0'
 //    compile 'wgmf:mocklocationlib:1.0.0'
+
+    compile project(':onsdk_all')
+    //    compile project(':baidunavi-base')
+    //    compile project(':baidunavi')
+    compile project(':NaviTts')
 }
