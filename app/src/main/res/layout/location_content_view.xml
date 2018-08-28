@@ -14,14 +14,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="5dp">
 
         <Button
-            android:id="@+id/btn_mock"
+            android:id="@+id/btn_baidu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:textColor="#177bbd" />
+            android:text="百度模拟导航"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btn_amap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/white"
+            android:text="高德模拟导航"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 </LinearLayout>
