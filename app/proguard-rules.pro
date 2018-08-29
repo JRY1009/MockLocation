@@ -39,6 +39,9 @@
 -keep interface vi.com.gdi.** { *; }
 -keep class **.R$* { *; }
 
+-dontwarn com.google.protobuf.**
+-keep class com.google.protobuf.** { *;}
+-keep interface com.google.protobuf.** { *;}
 
 #百度内部依赖 --------------------------------------------------------------------
 #navisdk tts

@@ -46,7 +46,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation project(':mocklocationlib')
-    implementation project(':onsdk_all')
-    implementation project(':NaviTts')
-    implementation files('libs/BaiduLBS_Android.jar')
+    compile project(':onsdk_all')
+    compile project(':NaviTts')
 }

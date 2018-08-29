@@ -298,6 +298,17 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
     }
 
 
+    public void startNavi(View v) {
+        if (route == null) {
+            Toast.makeText(this,
+                    "请先选择路线",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+    }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
