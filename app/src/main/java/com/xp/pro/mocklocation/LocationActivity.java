@@ -28,7 +28,6 @@ import com.xp.pro.mocklocationlib.LocationWidget;
 import java.io.File;
 
 public class LocationActivity extends Activity {
-    LocationWidget idLocationWidget;
     LocationBean mLocationBean;
 
     private static final String APP_FOLDER_NAME = "MockLocationDemo";
@@ -93,7 +92,7 @@ public class LocationActivity extends Activity {
     }
 
     private void initView() {
-        idLocationWidget = (LocationWidget) findViewById(R.id.id_location_wigdet);
+        LogicLocation.getInstance().setLocationWidget((LocationWidget) findViewById(R.id.id_location_wigdet));
 
         mBaiduBtn = (Button) findViewById(R.id.btn_baidu);
         mBaiduBtn.setOnClickListener(new View.OnClickListener() {
@@ -117,25 +116,25 @@ public class LocationActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        idLocationWidget.setMangerLocationData(mLocationBean.getLatitude(), mLocationBean.getLongitude());
-        idLocationWidget.startMockLocation();
+        LogicLocation.getInstance().setLocation(mLocationBean.getLatitude(), mLocationBean.getLongitude());
+        LogicLocation.getInstance().startMock();
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        idLocationWidget.refreshData();
+        LogicLocation.getInstance().refreshData();
     }
 
     @Override
     protected void onPause() {
-        idLocationWidget.removeUpdates();
+        LogicLocation.getInstance().removeUpdates();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        idLocationWidget.stopMockLocation();
+        LogicLocation.getInstance().stopMock();
         super.onDestroy();
     }
 

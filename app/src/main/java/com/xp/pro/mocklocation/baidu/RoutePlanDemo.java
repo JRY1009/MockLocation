@@ -3,6 +3,7 @@
  */
 package com.xp.pro.mocklocation.baidu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -20,6 +21,7 @@ import com.baidu.mapapi.overlayutil.OverlayManager;
 import com.baidu.mapapi.overlayutil.TransitRouteOverlay;
 import com.baidu.mapapi.overlayutil.WalkingRouteOverlay;
 import com.baidu.mapapi.search.core.RouteLine;
+import com.baidu.mapapi.search.core.RouteStep;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.route.BikingRouteLine;
 import com.baidu.mapapi.search.route.BikingRoutePlanOption;
@@ -40,6 +42,11 @@ import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.baidu.navisdk.adapter.BNRoutePlanNode.CoordinateType;
+import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
+import com.baidu.navisdk.adapter.IBNRoutePlanManager;
+import com.xp.pro.mocklocation.LogicLocation;
 import com.xp.pro.mocklocation.R;
 
 import android.app.Activity;
@@ -47,7 +54,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -93,6 +104,8 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
     String startNodeStr = "西二旗地铁站";
     String endNodeStr = "百度科技园";
     boolean hasShownDialogue = false;
+
+    static final String ROUTE_PLAN_NODE = "routePlanNode";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -306,7 +319,63 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
             return;
         }
 
+        BNRoutePlanNode sNode = null;
+        BNRoutePlanNode eNode = null;
+        List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
+        {
+            double longitude = route.getStarting().getLocation().longitude;
+            double latitude = route.getStarting().getLocation().latitude;
+            LogicLocation.getInstance().setLocation(longitude, latitude);
+            sNode = new BNRoutePlanNode(longitude, latitude, route.getStarting().getTitle(), route.getStarting().getTitle(), CoordinateType.GCJ02);
+            list.add(sNode);
+        }
 
+        {
+            double longitude = route.getTerminal().getLocation().longitude;
+            double latitude = route.getTerminal().getLocation().latitude;
+            eNode = new BNRoutePlanNode(longitude, latitude, route.getTerminal().getTitle(), route.getTerminal().getTitle(), CoordinateType.GCJ02);
+            list.add(eNode);
+        }
+
+        LogicLocation.getInstance().setRoute(route);
+
+        final BNRoutePlanNode finalSNode = sNode;
+        BaiduNaviManagerFactory.getRoutePlanManager().routeplanToNavi(
+                list,
+                IBNRoutePlanManager.RoutePlanPreference.ROUTE_PLAN_PREFERENCE_DEFAULT,
+                null,
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        switch (msg.what) {
+                            case IBNRoutePlanManager.MSG_NAVI_ROUTE_PLAN_START:
+                                Toast.makeText(RoutePlanDemo.this, "算路开始", Toast.LENGTH_SHORT)
+                                        .show();
+                                break;
+                            case IBNRoutePlanManager.MSG_NAVI_ROUTE_PLAN_SUCCESS:
+                                Toast.makeText(RoutePlanDemo.this, "算路成功", Toast.LENGTH_SHORT)
+                                        .show();
+                                break;
+                            case IBNRoutePlanManager.MSG_NAVI_ROUTE_PLAN_FAILED:
+                                Toast.makeText(RoutePlanDemo.this, "算路失败", Toast.LENGTH_SHORT)
+                                        .show();
+                                break;
+                            case IBNRoutePlanManager.MSG_NAVI_ROUTE_PLAN_TO_NAVI:
+                                Toast.makeText(RoutePlanDemo.this, "算路成功准备进入导航", Toast.LENGTH_SHORT)
+                                        .show();
+                                Intent intent = new Intent(RoutePlanDemo.this,
+                                        DemoGuideActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(ROUTE_PLAN_NODE, finalSNode);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                break;
+                            default:
+                                // nothing
+                                break;
+                        }
+                    }
+                });
     }
 
     @Override

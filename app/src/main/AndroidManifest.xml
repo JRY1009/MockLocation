@@ -71,6 +71,11 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name=".baidu.DemoGuideActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
     </application>
 
 </manifest>
