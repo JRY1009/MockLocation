@@ -76,6 +76,9 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
+
+
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

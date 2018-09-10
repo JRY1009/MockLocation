@@ -89,7 +89,7 @@ public class DemoGuideActivity extends Activity {
 
     private void showOverlay() {
         BNOverlayItem item =
-                new BNOverlayItem(2563047.686035, 1.2695675172607E7, BNOverlayItem.CoordinateType.BD09_MC);
+                new BNOverlayItem(116.27425929142444, 40.04398012865949, BNOverlayItem.CoordinateType.BD09LL);
         BNItemizedOverlay overlay = new BNItemizedOverlay(
                 DemoGuideActivity.this.getResources().getDrawable(R.drawable
                         .navi_guide_turn));
@@ -146,7 +146,7 @@ public class DemoGuideActivity extends Activity {
                     if (msg.what == MSG_RESET_NODE) {
                         mRouteGuideManager.resetEndNodeInNavi(
                                 new BNRoutePlanNode(116.27425929142444, 40.04398012865949, "百度科技园",
-                                        null, CoordinateType.GCJ02));
+                                        null, CoordinateType.BD09LL));
                     }
                 }
             };

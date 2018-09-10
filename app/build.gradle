@@ -16,6 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        flavorDimensions "dimen"
 
         multiDexEnabled true
 
@@ -39,6 +40,17 @@ android {
 
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+
+
+    productFlavors {
+
+        official {dimension "dimen"}
+
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+
     }
 }
 

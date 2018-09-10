@@ -6,8 +6,10 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.RouteStep;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.xp.pro.mocklocationlib.LocationBean;
 import com.xp.pro.mocklocationlib.LocationWidget;
@@ -142,7 +144,9 @@ public class LogicLocation {
                     Thread.sleep(1000);
                     LocationBean locationBean = mBeanList.get(i);
 
-                    LogicLocation.getInstance().setLocation(locationBean.getLatitude(), locationBean.getLongitude());
+                    Gps gps = PositionUtil.bd09_To_Gps84(locationBean.getLatitude(), locationBean.getLongitude());
+
+                    LogicLocation.getInstance().setLocation(gps.getWgLat(), gps.getWgLon());
 
                     Log.i("LogicLocation", "size:" + mBeanList.size() + ";pos:" + i + ";long:" + locationBean.getLongitude() + ";lat:" + locationBean.getLatitude());
                 } catch (InterruptedException e) {

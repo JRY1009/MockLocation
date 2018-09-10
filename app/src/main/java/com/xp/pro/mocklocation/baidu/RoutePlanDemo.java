@@ -326,14 +326,14 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
             double longitude = route.getStarting().getLocation().longitude;
             double latitude = route.getStarting().getLocation().latitude;
             LogicLocation.getInstance().setLocation(longitude, latitude);
-            sNode = new BNRoutePlanNode(longitude, latitude, route.getStarting().getTitle(), route.getStarting().getTitle(), CoordinateType.GCJ02);
+            sNode = new BNRoutePlanNode(longitude, latitude, route.getStarting().getTitle(), route.getStarting().getTitle(), CoordinateType.BD09LL);
             list.add(sNode);
         }
 
         {
             double longitude = route.getTerminal().getLocation().longitude;
             double latitude = route.getTerminal().getLocation().latitude;
-            eNode = new BNRoutePlanNode(longitude, latitude, route.getTerminal().getTitle(), route.getTerminal().getTitle(), CoordinateType.GCJ02);
+            eNode = new BNRoutePlanNode(longitude, latitude, route.getTerminal().getTitle(), route.getTerminal().getTitle(), CoordinateType.BD09LL);
             list.add(eNode);
         }
 

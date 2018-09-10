@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.baidu.navisdk.adapter.BNCommonSettingParam;
+import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.IBNTTSManager;
 import com.baidu.navisdk.adapter.IBaiduNaviManager;
@@ -216,6 +218,7 @@ public class LocationActivity extends Activity {
                 });
 
     }
+
 
     private void initTTS() {
         // 使用内置TTS
