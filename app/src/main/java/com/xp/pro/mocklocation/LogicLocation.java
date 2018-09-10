@@ -98,12 +98,12 @@ public class LogicLocation {
                 double chaLongitude = (locationBean.getLongitude() - lastBean.getLongitude()) / 10.0;
                 double chaLatitude = (locationBean.getLatitude() - lastBean.getLatitude()) / 10.0;
 
-//                for (int k=1; k<10; k++) {
-//                    LocationBean chaBean = new LocationBean();
-//                    chaBean.setLongitude(lastBean.getLongitude() + chaLongitude * k);
-//                    chaBean.setLatitude(lastBean.getLatitude() + chaLatitude * k);
-//                    mBeanList.add(chaBean);
-//                }
+                for (int k=1; k<10; k++) {
+                    LocationBean chaBean = new LocationBean();
+                    chaBean.setLongitude(lastBean.getLongitude() + chaLongitude * k);
+                    chaBean.setLatitude(lastBean.getLatitude() + chaLatitude * k);
+                    mBeanList.add(chaBean);
+                }
                 mBeanList.add(locationBean);
             }
         }
@@ -116,12 +116,12 @@ public class LogicLocation {
             LocationBean lastBean = mBeanList.get(mBeanList.size() - 1);
             double chaLongitude = (locationBean.getLongitude() - lastBean.getLongitude()) / 10.0;
             double chaLatitude = (locationBean.getLatitude() - lastBean.getLatitude()) / 10.0;
-//            for (int k=1; k<10; k++) {
-//                LocationBean chaBean = new LocationBean();
-//                chaBean.setLongitude(lastBean.getLongitude() + chaLongitude * k);
-//                chaBean.setLatitude(lastBean.getLatitude() + chaLatitude * k);
-//                mBeanList.add(chaBean);
-//            }
+            for (int k=1; k<10; k++) {
+                LocationBean chaBean = new LocationBean();
+                chaBean.setLongitude(lastBean.getLongitude() + chaLongitude * k);
+                chaBean.setLatitude(lastBean.getLatitude() + chaLatitude * k);
+                mBeanList.add(chaBean);
+            }
 
             mBeanList.add(locationBean);
         }

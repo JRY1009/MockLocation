@@ -145,7 +145,7 @@ public class DemoGuideActivity extends Activity {
                 public void handleMessage(android.os.Message msg) {
                     if (msg.what == MSG_RESET_NODE) {
                         mRouteGuideManager.resetEndNodeInNavi(
-                                new BNRoutePlanNode(116.21142, 40.85087, "百度大厦11",
+                                new BNRoutePlanNode(116.27425929142444, 40.04398012865949, "百度科技园",
                                         null, CoordinateType.GCJ02));
                     }
                 }
