@@ -114,6 +114,8 @@ public class DemoGuideActivity extends Activity {
         super.onDestroy();
         mRouteGuideManager.onDestroy(false);
         EventHandler.getInstance().disposeDialog();
+
+        LogicLocation.getInstance().stopMock();
     }
 
     @Override

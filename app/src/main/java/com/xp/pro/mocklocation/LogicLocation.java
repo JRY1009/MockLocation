@@ -97,10 +97,10 @@ public class LogicLocation {
                 locationBean.setLatitude(step.getWayPoints().get(j).latitude);
 
                 LocationBean lastBean = mBeanList.get(mBeanList.size() - 1);
-                double chaLongitude = (locationBean.getLongitude() - lastBean.getLongitude()) / 10.0;
-                double chaLatitude = (locationBean.getLatitude() - lastBean.getLatitude()) / 10.0;
+                double chaLongitude = (locationBean.getLongitude() - lastBean.getLongitude()) / 5.0;
+                double chaLatitude = (locationBean.getLatitude() - lastBean.getLatitude()) / 5.0;
 
-                for (int k=1; k<10; k++) {
+                for (int k=1; k<5; k++) {
                     LocationBean chaBean = new LocationBean();
                     chaBean.setLongitude(lastBean.getLongitude() + chaLongitude * k);
                     chaBean.setLatitude(lastBean.getLatitude() + chaLatitude * k);
@@ -116,9 +116,9 @@ public class LogicLocation {
             locationBean.setLatitude(mRoute.getTerminal().getLocation().latitude);
 
             LocationBean lastBean = mBeanList.get(mBeanList.size() - 1);
-            double chaLongitude = (locationBean.getLongitude() - lastBean.getLongitude()) / 10.0;
-            double chaLatitude = (locationBean.getLatitude() - lastBean.getLatitude()) / 10.0;
-            for (int k=1; k<10; k++) {
+            double chaLongitude = (locationBean.getLongitude() - lastBean.getLongitude()) / 5.0;
+            double chaLatitude = (locationBean.getLatitude() - lastBean.getLatitude()) / 5.0;
+            for (int k=1; k<5; k++) {
                 LocationBean chaBean = new LocationBean();
                 chaBean.setLongitude(lastBean.getLongitude() + chaLongitude * k);
                 chaBean.setLatitude(lastBean.getLatitude() + chaLatitude * k);
