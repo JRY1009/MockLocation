@@ -4,6 +4,8 @@
 package com.xp.pro.mocklocation.baidu;
 
 import com.baidu.navisdk.adapter.BNaviCommonParams;
+import com.cyfonly.flogger.FLogger;
+import com.cyfonly.flogger.constants.Constant;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -52,8 +54,13 @@ public class EventHandler {
     }
     
     public void handleNaviEvent(int what, int arg1, int arg2, Bundle bundle) {
-        Log.i("onCommonEventCall", String.format("%d,%d,%d,%s", what, arg1, arg2,
-                (bundle == null ? "" : bundle.toString())));
+
+        if (what != BNaviCommonParams.MessageType.EVENT_CURRENT_SPEED) {
+            FLogger.getInstance().writeLog("NaviEvent_" + NormalUtils.sDate, Constant.INFO, String.format("%d,%d,%d,%s", what, arg1, arg2,
+                    (bundle == null ? "" : bundle.toString())));
+        }
+
+
         if ( mEventDialog == null ) {
             return ;
         }

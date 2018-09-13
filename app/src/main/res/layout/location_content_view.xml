@@ -22,7 +22,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:text="百度模拟导航"
+            android:text="百度模拟导航播报版"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btn_baidu_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:text="百度模拟导航日志版"
             android:textColor="@android:color/black" />
 
         <Button

@@ -23,6 +23,11 @@ import com.baidu.mapapi.overlayutil.WalkingRouteOverlay;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.RouteStep;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.route.BikingRouteLine;
 import com.baidu.mapapi.search.route.BikingRoutePlanOption;
 import com.baidu.mapapi.search.route.BikingRouteResult;
@@ -64,6 +69,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +80,17 @@ import android.widget.Toast;
  * 同时展示如何进行节点浏览并弹出泡泡
  */
 public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListener,
-        OnGetRoutePlanResultListener {
+        OnGetRoutePlanResultListener,
+        OnGetGeoCoderResultListener {
+
+    GeoCoder mGeoCoder = null; // 搜索模块，也可去掉地图模块独立使用
+    EditText mStartEt;
+    EditText mEndEt;
+    Button mStartGeo;
+    Button mEndGeo;
+    TextView mLocStart;
+    TextView mLocEnd;
+    boolean mClickStartGeo = false;
 
     // 浏览路线节点相关
     Button mBtnPre = null; // 上一个节点
@@ -121,6 +137,32 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
         mBtnNext.setVisibility(View.INVISIBLE);
         // 地图点击事件处理
         mBaidumap.setOnMapClickListener(this);
+
+
+        mStartEt = (EditText) findViewById(R.id.et_start) ;
+        mEndEt = (EditText) findViewById(R.id.et_end) ;
+        mLocStart = (TextView) findViewById(R.id.tv_loc_start) ;
+        mLocEnd = (TextView) findViewById(R.id.tv_loc_end) ;
+        mStartGeo = (Button) findViewById(R.id.btn_start_geo);
+        mStartGeo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickStartGeo = true;
+                mGeoCoder.geocode(new GeoCodeOption().city("北京").address(mStartEt.getText().toString()));
+            }
+        });
+        mEndGeo = (Button) findViewById(R.id.btn_end_geo);
+        mEndGeo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickStartGeo = false;
+                mGeoCoder.geocode(new GeoCodeOption().city("北京").address(mEndEt.getText().toString()));
+            }
+        });
+
+        mGeoCoder = GeoCoder.newInstance();
+        mGeoCoder.setOnGetGeoCodeResultListener(this);
+
         // 初始化搜索模块，注册事件监听
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);
@@ -715,6 +757,30 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
             }
 
         }
+    }
+
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult result) {
+        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(RoutePlanDemo.this, "抱歉，未能找到结果", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        if (mClickStartGeo) {
+            startNodeStr = mStartEt.getText().toString();
+            String strInfo = String.format("%f,%f", result.getLocation().latitude, result.getLocation().longitude);
+            mLocStart.setText(strInfo);
+        } else {
+            endNodeStr = mEndEt.getText().toString();
+            String strInfo = String.format("%f,%f", result.getLocation().latitude, result.getLocation().longitude);
+            mLocEnd.setText(strInfo);
+        }
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
     }
 
     // 定制RouteOverly

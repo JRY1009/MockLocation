@@ -22,6 +22,8 @@ import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.IBNTTSManager;
 import com.baidu.navisdk.adapter.IBaiduNaviManager;
+import com.cyfonly.flogger.FLogger;
+import com.cyfonly.flogger.constants.Constant;
 import com.xp.pro.mocklocation.baidu.NormalUtils;
 import com.xp.pro.mocklocation.baidu.RoutePlanDemo;
 import com.xp.pro.mocklocationlib.LocationBean;
@@ -37,6 +39,7 @@ public class LocationActivity extends Activity {
     private static final int authBaseRequestCode = 1;
 
     Button mBaiduBtn;
+    Button mBaiduLogBtn;
     Button mAmapBtn;
 
     private boolean hasInitSuccess = false;
@@ -57,10 +60,6 @@ public class LocationActivity extends Activity {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION);
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_LOCATION);
             }
-        }
-
-        if (initDirs()) {
-            initNavi();
         }
 
         initMockLocationData();
@@ -100,6 +99,26 @@ public class LocationActivity extends Activity {
         mBaiduBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (initDirs()) {
+                    initNavi(false);
+                }
+
+                Intent intent;
+                intent = new Intent(LocationActivity.this, RoutePlanDemo.class);
+                startActivity(intent);
+            }
+        });
+
+        mBaiduLogBtn = (Button) findViewById(R.id.btn_baidu_log);
+        mBaiduLogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (initDirs()) {
+                    initNavi(true);
+                }
+
                 Intent intent;
                 intent = new Intent(LocationActivity.this, RoutePlanDemo.class);
                 startActivity(intent);
@@ -175,7 +194,7 @@ public class LocationActivity extends Activity {
         return true;
     }
 
-    private void initNavi() {
+    private void initNavi(final boolean log) {
         // 申请权限
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             if (!hasBasePhoneAuth()) {
@@ -208,7 +227,7 @@ public class LocationActivity extends Activity {
                         Toast.makeText(LocationActivity.this, "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
                         hasInitSuccess = true;
                         // 初始化tts
-                        initTTS();
+                        initTTS(log);
                     }
 
                     @Override
@@ -219,14 +238,41 @@ public class LocationActivity extends Activity {
 
     }
 
+    // 外置tts时需要实现的接口回调
+    private IBNTTSManager.IBNOuterTTSPlayerCallback mTTSCallback = new IBNTTSManager.IBNOuterTTSPlayerCallback() {
 
-    private void initTTS() {
-        // 使用内置TTS
-        BaiduNaviManagerFactory.getTTSManager().initTTS(getApplicationContext(),
-                getSdcardDir(), APP_FOLDER_NAME, NormalUtils.getTTSAppID());
+        @Override
+        public int getTTSState() {
+//            /** 播放器空闲 */
+//            int PLAYER_STATE_IDLE = 1;
+//            /** 播放器正在播报 */
+//            int PLAYER_STATE_PLAYING = 2;
+            return PLAYER_STATE_IDLE;
+        }
 
-        // 不使用内置TTS
-//         BaiduNaviManagerFactory.getTTSManager().initTTS(mTTSCallback);
+        @Override
+        public int playTTSText(String text, String s1, int i, String s2) {
+            Log.e("BNSDKDemo", "playTTSText:" + text);
+            FLogger.getInstance().writeLog("TTSText_" + NormalUtils.sDate, Constant.INFO, String.format("%s %s %d %s", text, s1, i, s2));
+            return 0;
+        }
+
+        @Override
+        public void stopTTS() {
+            Log.e("BNSDKDemo", "stopTTS");
+        }
+    };
+
+    private void initTTS(boolean log) {
+        if (log) {
+            // 不使用内置TTS
+            BaiduNaviManagerFactory.getTTSManager().initTTS(mTTSCallback);
+        } else {
+
+            // 使用内置TTS
+            BaiduNaviManagerFactory.getTTSManager().initTTS(getApplicationContext(),
+                    getSdcardDir(), APP_FOLDER_NAME, NormalUtils.getTTSAppID());
+        }
 
         // 注册同步内置tts状态回调
         BaiduNaviManagerFactory.getTTSManager().setOnTTSStateChangedListener(
