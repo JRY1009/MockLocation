@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
@@ -41,6 +42,9 @@ public class LocationActivity extends Activity {
     Button mBaiduBtn;
     Button mBaiduLogBtn;
     Button mAmapBtn;
+
+    EditText mDivEt;
+    Button mDivBtn;
 
     private boolean hasInitSuccess = false;
     private String mSDCardPath = null;
@@ -130,6 +134,16 @@ public class LocationActivity extends Activity {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        mDivEt = (EditText) findViewById(R.id.et_div);
+        mDivBtn = (Button) findViewById(R.id.btn_div);
+        mDivBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int div = Integer.parseInt(mDivEt.getText().toString());
+                LogicLocation.getInstance().setDiv(div);
             }
         });
     }
