@@ -11,6 +11,9 @@ import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.RouteStep;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.cyfonly.flogger.FLogger;
+import com.cyfonly.flogger.constants.Constant;
+import com.xp.pro.mocklocation.baidu.NormalUtils;
 import com.xp.pro.mocklocationlib.LocationBean;
 import com.xp.pro.mocklocationlib.LocationWidget;
 
@@ -29,6 +32,7 @@ public class LogicLocation {
     private LocationWidget mLocationWidget;
     private RouteLine mRoute = null;
     private List<LocationBean> mBeanList = new ArrayList<>();
+    private LocationBean mCurrentBean;
 
     private int mDiv = 5;
 
@@ -57,6 +61,10 @@ public class LogicLocation {
 
     public void setLocation(double latitude, double longitude) {
         mLocationWidget.setMangerLocationData(latitude, longitude);
+    }
+
+    public LocationBean getCurrentLocation() {
+        return  mCurrentBean;
     }
 
     public void startMock() {
@@ -134,6 +142,10 @@ public class LogicLocation {
             mBeanList.add(locationBean);
         }
 
+        for (int i=0; i<mBeanList.size(); i++) {
+            FLogger.getInstance().writeLog("RouteList_" + NormalUtils.sDate, Constant.INFO, String.format("lat: %f, long: %f", mBeanList.get(i).getLatitude(), mBeanList.get(i).getLongitude()));
+        }
+
         new Thread(new RunnableNavi()).start();
     }
 
@@ -149,6 +161,7 @@ public class LogicLocation {
                 try {
                     Thread.sleep(1000);
                     LocationBean locationBean = mBeanList.get(i);
+                    mCurrentBean = locationBean;
 
                     Gps gps = PositionUtil.bd09_To_Gps84(locationBean.getLatitude(), locationBean.getLongitude());
 

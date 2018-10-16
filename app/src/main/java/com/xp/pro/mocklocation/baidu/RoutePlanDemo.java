@@ -181,8 +181,22 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
         mBaidumap.clear();
         // 处理搜索按钮响应
         // 设置起终点信息，对于tranist search 来说，城市名无意义
-        PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", startNodeStr);
-        PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", endNodeStr);
+
+        PlanNode stNode;
+        PlanNode enNode;
+
+        String start = mStartEt.getText().toString();
+        String end = mEndEt.getText().toString();
+        String [] startLoc = start.split(",");
+        String [] endLoc = end.split(",");
+        if (startLoc.length == 2 && endLoc.length == 2) {
+
+            stNode = PlanNode.withLocation(new LatLng(Double.parseDouble(startLoc[1]), Double.parseDouble(startLoc[0])));
+            enNode = PlanNode.withLocation(new LatLng(Double.parseDouble(endLoc[1]), Double.parseDouble(endLoc[0])));
+        } else {
+            stNode = PlanNode.withCityNameAndPlaceName("北京", startNodeStr);
+            enNode = PlanNode.withCityNameAndPlaceName("北京", endNodeStr);
+        }
 
         // 实际使用中请对起点终点城市进行正确的设定
 

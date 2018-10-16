@@ -18,6 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
 import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
@@ -32,7 +39,7 @@ import com.xp.pro.mocklocationlib.LocationWidget;
 
 import java.io.File;
 
-public class LocationActivity extends Activity {
+public class LocationActivity extends Activity implements OnGetGeoCoderResultListener {
     LocationBean mLocationBean;
 
     private static final String APP_FOLDER_NAME = "MockLocationDemo";
@@ -48,6 +55,7 @@ public class LocationActivity extends Activity {
 
     private boolean hasInitSuccess = false;
     private String mSDCardPath = null;
+    GeoCoder mGeoCoder = null; // 搜索模块，也可去掉地图模块独立使用
 
     private static final String[] authBaseArr = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -65,6 +73,9 @@ public class LocationActivity extends Activity {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_LOCATION);
             }
         }
+
+        mGeoCoder = GeoCoder.newInstance();
+        mGeoCoder.setOnGetGeoCodeResultListener(this);
 
         initMockLocationData();
         initView();
@@ -268,6 +279,15 @@ public class LocationActivity extends Activity {
         public int playTTSText(String text, String s1, int i, String s2) {
             Log.e("BNSDKDemo", "playTTSText:" + text);
             FLogger.getInstance().writeLog("TTSText_" + NormalUtils.sDate, Constant.INFO, String.format("%s %s %d %s", text, s1, i, s2));
+
+            if (LogicLocation.getInstance().getCurrentLocation() != null) {
+                LatLng ptCenter = new LatLng(LogicLocation.getInstance().getCurrentLocation().getLatitude(),
+                        LogicLocation.getInstance().getCurrentLocation().getLongitude());
+
+                mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption()
+                        .location(ptCenter).newVersion(1));
+            }
+
             return 0;
         }
 
@@ -317,5 +337,20 @@ public class LocationActivity extends Activity {
                     }
                 }
         );
+    }
+
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+            FLogger.getInstance().writeLog("TTSText_" + NormalUtils.sDate, Constant.INFO, String.format("Address: 未能找到结果"));
+            return;
+        }
+
+        FLogger.getInstance().writeLog("TTSText_" + NormalUtils.sDate, Constant.INFO, String.format("lat: %f, long: %f, Address: %s ", result.getLocation().latitude, result.getLocation().longitude, result.getAddress()));
     }
 }
